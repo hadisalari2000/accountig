@@ -61,7 +61,7 @@ public class GlobalService {
     }
 
     @Synchronized
-    public static Account getAccountExists(Integer accountId){
+    public static Account getAccountExists(Long accountId){
         return accountRepository.findAccountById(accountId)
                 .orElseThrow(()->serviceExceptionBuilder("not.found.account",HttpStatus.NOT_FOUND));
     }

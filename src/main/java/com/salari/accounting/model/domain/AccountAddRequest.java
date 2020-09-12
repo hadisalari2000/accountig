@@ -1,4 +1,4 @@
-package com.salari.accounting.model.dto;
+package com.salari.accounting.model.domain;
 
 import com.salari.accounting.model.enums.AccountTypes;
 import lombok.AllArgsConstructor;
@@ -6,18 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDTO {
+public class AccountAddRequest {
 
-    private Long id;
+    @NotNull
     private Integer userId;
-    private UserDTO user;
+
+    @NotNull
     private AccountTypes accountType;
+
+    @NotNull
     private Long openingDate;
-    private String accountNumber;
+
+    @NotNull
     private Long remaining;
-    private Boolean isActive;
 }

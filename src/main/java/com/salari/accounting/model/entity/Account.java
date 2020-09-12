@@ -38,4 +38,7 @@ public class Account extends BaseEntity<Long> {
     @NotNull
     @Min(0)
     private Long remaining;
+
+    @NotNull
+    private Boolean isActive;
 }
