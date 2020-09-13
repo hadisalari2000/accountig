@@ -57,7 +57,7 @@ public class GlobalService {
 
     @Synchronized
     public static User getUserExists(String userName){
-        return userRepository.findUserByUserName(userName)
+        return userRepository.findUserByUserNameIgnoreCase(userName)
                 .orElseThrow(()->serviceExceptionBuilder("not.found.user",HttpStatus.NOT_FOUND));
     }
 

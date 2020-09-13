@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User,Integer>, JpaSpecific
 
     Optional<User> findUserById(Integer id);
     Optional<List<User>> findAllByIdIsNotNull();
-    Optional<User> findUserByUserName(String userName);
+    Optional<User> findUserByUserNameIgnoreCase(String userName);
     Optional<User> findUserByNationalCode(String nationalCode);
     Optional<User> findUserByUserNameOrNationalCode(String userName,String password);
 }
