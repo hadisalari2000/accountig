@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,5 +19,4 @@ public class UserDTO {
     private String nationalCode;
     private Short roleId;
     private RoleDTO role;
-    private List<AccountDTO> accounts;
 }

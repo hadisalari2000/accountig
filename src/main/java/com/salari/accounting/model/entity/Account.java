@@ -24,7 +24,7 @@ public class Account extends BaseEntity<Long> {
     @JoinColumn(name = "user_id",insertable = false,updatable = false)
     private User user;
 
-    @Column(name = "account_type",length = 10,nullable = false)
+    @Column(name = "account_type",length = 20,nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountTypes accountType;
 

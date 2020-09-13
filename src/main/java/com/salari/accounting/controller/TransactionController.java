@@ -2,7 +2,6 @@ package com.salari.accounting.controller;
 
 import com.salari.accounting.service.TransactionService;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

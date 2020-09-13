@@ -23,7 +23,7 @@ public interface AccountRepository extends JpaRepository<Account,Long>, JpaSpeci
     Optional<Account> findAccountByUserIdAndAccountType(Integer userId, AccountTypes accountTypes);
 
     @Query(value = "SELECT max(accountNumber) FROM Account ")
-    Optional<Account> findMaxByAccountNumber();
+    Optional<String> findMaxByAccountNumber();
 
     Page<Account> findAccountsByUserId(Integer userId, Pageable pageable);
 }

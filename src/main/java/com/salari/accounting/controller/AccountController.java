@@ -25,7 +25,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/v1/account")
-    public ResponseEntity<?> deleteAccount(@Valid @ApiParam(name="id",value="id") @RequestParam Long accountId){
+    public ResponseEntity<?> deleteAccount(@Valid @ApiParam(name="accountId",value="accountId") @RequestParam Long accountId){
         return new ResponseEntity<>(accountService.deleteAccount(accountId),HttpStatus.OK);
     }
 

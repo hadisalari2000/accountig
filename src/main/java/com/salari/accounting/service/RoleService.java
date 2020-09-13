@@ -7,7 +7,6 @@ import com.salari.accounting.model.entity.Role;
 import com.salari.accounting.model.enums.RoleTypes;
 import com.salari.accounting.model.mapper.RoleMapper;
 import com.salari.accounting.repository.RoleRepository;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

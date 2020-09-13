@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,8 +16,8 @@ import java.util.List;
 public class User extends BaseEntity<Integer> {
 
     @Column(name = "user_name", nullable = false, unique = true)
-    @Size(min = 5, max = 20, message = "{length.user.username}")
-    @Pattern(regexp = "regexp.letters.and.numbers", message = "{invalid.user.username}")
+    @Size(min = 4, max = 20, message = "{length.user.username}")
+    @Pattern(regexp = "^[0-9A-Za-z]*$", message = "{invalid.user.username}")
     private String userName;
 
     @Column(name = "password", nullable = false, length = 100)
@@ -34,7 +33,7 @@ public class User extends BaseEntity<Integer> {
 
     @Column(name = "national_code", nullable = false, unique = true)
     @Size(min = 10, max = 11, message = "{length.user.national.code}")
-    @Pattern(regexp = "regexp.numbers", message = "{invalid.user.national.code}")
+    @Pattern(regexp = "^[0-9]*$", message = "{invalid.user.national.code}")
     private String nationalCode;
 
     @Column(name = "role_id", nullable = false)
@@ -44,9 +43,4 @@ public class User extends BaseEntity<Integer> {
     @JoinColumn(name = "role_id", updatable = false, insertable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Account> accounts;
-
-    @OneToMany(mappedBy = "transmitterUser",cascade = CascadeType.PERSIST)
-    private List<Transaction> transactions;
 }

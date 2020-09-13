@@ -3,6 +3,8 @@ package com.salari.accounting.service;
 import com.salari.accounting.model.domain.TransactionAddRequest;
 import com.salari.accounting.model.dto.BaseDTO;
 import com.salari.accounting.model.dto.MetaDTO;
+import com.salari.accounting.model.dto.PagerDTO;
+import com.salari.accounting.model.dto.TransactionDTO;
 import com.salari.accounting.model.entity.Account;
 import com.salari.accounting.model.entity.Transaction;
 import com.salari.accounting.model.mapper.TransactionMapper;
@@ -35,21 +37,25 @@ public class TransactionService {
         Account account = getAccountExists(accountId);
         if (!account.getIsActive()) return BaseDTO.builder().metaDTO(MetaDTO.getInstance()).data(null).build();
 
-        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Pageable pageable = PageRequest.of(pageNumber-1, 10);
         Page<Transaction> transactions = transactionRepository.findTransactionsBySourceAccountId(account.getId(), pageable);
+        Page<TransactionDTO> transactionDTOS = transactions.map(transactionMapper::TRANSACTION_DTO);
+        PagerDTO<TransactionDTO> pagerDTO = new PagerDTO<>(transactionDTOS);
         return BaseDTO.builder()
                 .metaDTO(MetaDTO.getInstance())
-                .data(transactions.stream().map(transactionMapper::TRANSACTION_DTO).collect(Collectors.toList()))
+                .data(pagerDTO)
                 .build();
     }
 
     public BaseDTO getAccountTransactionForAdmin(Long accountId, Short pageNumber) {
         Account account = getAccountExists(accountId);
-        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Pageable pageable = PageRequest.of(pageNumber-1, 10);
         Page<Transaction> transactions = transactionRepository.findTransactionsBySourceAccountId(account.getId(), pageable);
+        Page<TransactionDTO> transactionDTOS = transactions.map(transactionMapper::TRANSACTION_DTO);
+        PagerDTO<TransactionDTO> pagerDTO = new PagerDTO<>(transactionDTOS);
         return BaseDTO.builder()
                 .metaDTO(MetaDTO.getInstance())
-                .data(transactions.stream().map(transactionMapper::TRANSACTION_DTO).collect(Collectors.toList()))
+                .data(pagerDTO)
                 .build();
     }
 

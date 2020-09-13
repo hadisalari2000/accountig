@@ -1,9 +1,12 @@
 package com.salari.accounting.service;
 
 import com.salari.accounting.model.domain.AccountAddRequest;
+import com.salari.accounting.model.dto.AccountDTO;
 import com.salari.accounting.model.dto.BaseDTO;
 import com.salari.accounting.model.dto.MetaDTO;
+import com.salari.accounting.model.dto.PagerDTO;
 import com.salari.accounting.model.entity.Account;
+import com.salari.accounting.model.entity.User;
 import com.salari.accounting.model.mapper.AccountMapper;
 import com.salari.accounting.repository.AccountRepository;
 import org.springframework.data.domain.Page;
@@ -44,21 +47,25 @@ public class AccountService {
     }
 
     public BaseDTO getAllUserAccounts(Integer userId,Short pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Pageable pageable = PageRequest.of(pageNumber-1, 10);
         Page<Account> accounts = accountRepository.findAccountsByUserId(userId,pageable);
+        Page<AccountDTO> accountDTOS = accounts.map(accountMapper::ACCOUNT_DTO);
+        PagerDTO<AccountDTO> pagerDTO = new PagerDTO<>(accountDTOS);
         return BaseDTO.builder()
                 .metaDTO(MetaDTO.getInstance())
-                .data(accounts.stream().map(accountMapper::ACCOUNT_DTO).collect(Collectors.toList()))
+                .data(pagerDTO)
                 .build();
     }
 
     @Transactional
     public BaseDTO addAccount(AccountAddRequest request) {
         String accountNumber=createAccountNumber();
+
+        User user=getUserExists(request.getUserId());
         if (accountRepository.findAccountByAccountNumber(accountNumber).isPresent())
             throw serviceExceptionBuilder("duplicate.account.number", HttpStatus.BAD_REQUEST);
 
-        if(accountRepository.findAccountByUserIdAndAccountType(request.getUserId(),request.getAccountType()).isPresent())
+        if(accountRepository.findAccountByUserIdAndAccountType(user.getId(),request.getAccountType()).isPresent())
             throw serviceExceptionBuilder("duplicate.account.type", HttpStatus.BAD_REQUEST);
 
         Account account = Account.builder()
@@ -66,7 +73,8 @@ public class AccountService {
                 .accountType(request.getAccountType())
                 .openingDate(request.getOpeningDate())
                 .remaining(request.getRemaining())
-                .userId(request.getUserId())
+                .userId(user.getId())
+                .isActive(true)
                 .build();
 
         accountRepository.save(account);
@@ -111,7 +119,7 @@ public class AccountService {
     }
 
     private String createAccountNumber(){
-        Optional<Account> account=accountRepository.findMaxByAccountNumber();
-        return String.format("%010d", Long.parseLong(account.isPresent()?account.get().getAccountNumber():"0")+1);
+        Optional<String> account=accountRepository.findMaxByAccountNumber();
+        return String.format("%010d", Long.parseLong(account.isPresent()?account.get():"0")+1);
     }
 }

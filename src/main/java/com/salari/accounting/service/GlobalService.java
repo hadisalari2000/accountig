@@ -1,5 +1,6 @@
 package com.salari.accounting.service;
 
+import com.salari.accounting.configuration.ApplicationProperties;
 import com.salari.accounting.exception.ServiceException;
 import com.salari.accounting.model.entity.Account;
 import com.salari.accounting.model.entity.Role;
@@ -30,8 +31,8 @@ public class GlobalService {
     @Synchronized
     public static ServiceException serviceExceptionBuilder(String key, HttpStatus httpStatus) {
         return ServiceException.builder()
-                .key(key)
-                .message(key)
+                .key(ApplicationProperties.getProperty(key))
+                .message(ApplicationProperties.getProperty(key))
                 .httpStatus(httpStatus)
                 .build();
     }

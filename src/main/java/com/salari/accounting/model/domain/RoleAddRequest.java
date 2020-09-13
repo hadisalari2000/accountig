@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
@@ -18,9 +17,7 @@ public class RoleAddRequest {
 
     @NotNull
     @Size(min=3,max=100,message = "{length.role.title}")
-    @Pattern(regexp = "regexp.letters",message = "invalid.role.title")
     private String title;
 
-    @Size(max=5)
     private RoleTypes roleTypes;
 }

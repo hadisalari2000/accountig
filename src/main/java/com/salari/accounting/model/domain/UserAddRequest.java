@@ -17,12 +17,12 @@ import javax.validation.constraints.Size;
 public class UserAddRequest {
 
     @NotNull
-    @Size(min = 5, max = 20, message = "{length.user.username}")
-    @Pattern(regexp = "regexp.letters.and.numbers", message = "{invalid.user.username}")
+    @Size(min = 4, max = 20, message = "{length.user.username}")
+    @Pattern(regexp = "^[0-9A-Za-z]*$", message = "{invalid.user.username}")
     private String userName;
 
     @NotNull
-    @Size(min=5,max=20)
+    @Size(min=4,max=20)
     private String password;
 
     @NotNull
@@ -35,7 +35,7 @@ public class UserAddRequest {
 
     @NotNull
     @Size(min = 10, max = 11, message = "{length.user.national.code}")
-    @Pattern(regexp = "regexp.numbers", message = "{invalid.user.national.code}")
+    @Pattern(regexp = "^[0-9]*$", message = "{invalid.user.national.code}")
     private String nationalCode;
 
     @NotNull
