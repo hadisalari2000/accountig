@@ -9,6 +9,7 @@ import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -153,5 +154,14 @@ public class ServiceExceptionHandler extends ApplicationContextHolder {
                 .build();
         return new ResponseEntity<>(baseDTO, HttpStatus.INTERNAL_SERVER_ERROR
         );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public final ResponseEntity<BaseDTO> handleAccessExceptions(AccessDeniedException ex, HttpServletRequest request) {
+        BaseDTO baseDTO = BaseDTO.builder()
+                .metaDTO(MetaDTO.builder().message(ApplicationProperties.getProperty("accessDenied.text")).build())
+                .data(null)
+                .build();
+        return new ResponseEntity<>(baseDTO, HttpStatus.FORBIDDEN);
     }
 }

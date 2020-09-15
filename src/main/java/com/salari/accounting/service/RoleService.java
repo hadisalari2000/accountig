@@ -4,7 +4,6 @@ import com.salari.accounting.model.domain.RoleAddRequest;
 import com.salari.accounting.model.dto.BaseDTO;
 import com.salari.accounting.model.dto.MetaDTO;
 import com.salari.accounting.model.entity.Role;
-import com.salari.accounting.model.enums.RoleTypes;
 import com.salari.accounting.model.mapper.RoleMapper;
 import com.salari.accounting.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
@@ -34,13 +33,6 @@ public class RoleService {
                 .build();
     }
 
-    public BaseDTO getRoleByRoleType(RoleTypes roleTypes) {
-        return BaseDTO.builder()
-                .metaDTO(MetaDTO.getInstance())
-                .data(roleMapper.ROLE_DTO(GlobalService.getRoleExists(roleTypes)))
-                .build();
-    }
-
     public BaseDTO getAllRole() {
         List<Role> roles = roleRepository.findAllByIdIsNotNull()
                 .orElseThrow(() -> serviceExceptionBuilder("not.found.role", HttpStatus.NOT_FOUND));
@@ -51,11 +43,10 @@ public class RoleService {
     }
 
     public BaseDTO addRole(RoleAddRequest roleAddRequest) {
-        if (roleRepository.findRoleByRoleTypes(roleAddRequest.getRoleTypes()).isPresent())
+        if (roleRepository.findRoleByTitle(roleAddRequest.getTitle()).isPresent())
             throw serviceExceptionBuilder("duplicate_role", HttpStatus.BAD_REQUEST);
 
         Role role = Role.builder()
-                .roleTypes(roleAddRequest.getRoleTypes())
                 .title(roleAddRequest.getTitle())
                 .build();
 

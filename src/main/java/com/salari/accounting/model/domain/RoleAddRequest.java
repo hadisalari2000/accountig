@@ -1,6 +1,5 @@
 package com.salari.accounting.model.domain;
 
-import com.salari.accounting.model.enums.RoleTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +17,4 @@ public class RoleAddRequest {
     @NotNull
     @Size(min=3,max=100,message = "{length.role.title}")
     private String title;
-
-    private RoleTypes roleTypes;
 }

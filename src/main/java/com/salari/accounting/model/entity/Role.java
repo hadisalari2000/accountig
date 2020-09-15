@@ -1,5 +1,4 @@
 package com.salari.accounting.model.entity;
-import com.salari.accounting.model.enums.RoleTypes;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,9 +16,4 @@ public class Role extends BaseEntity<Short> {
     @Column(name = "title",nullable = false)
     @Size(min=3,max=100,message = "{length.role.title}")
     private String title;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="key",nullable = false)
-    @Size(max=5)
-    private RoleTypes roleTypes;
 }

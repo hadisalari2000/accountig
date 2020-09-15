@@ -5,6 +5,7 @@ import com.salari.accounting.configuration.ApplicationProperties;
 import com.salari.accounting.exception.ServiceException;
 import com.salari.accounting.model.entity.User;
 import com.salari.accounting.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,18 +19,16 @@ import java.util.Optional;
 @Service
 public class UsersDetails extends ApplicationContextHolder implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
-    public UsersDetails(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private ApplicationProperties applicationProperties;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username)  {
+    public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userRepository.findUserByUserNameIgnoreCase(username);
         if (!user.isPresent()) {
             throw ServiceException.builder()
-                    .key(ApplicationProperties.getProperty("invalidLogin.code"))
                     .message(ApplicationProperties.getProperty("invalidLogin.text"))
                     .httpStatus(HttpStatus.UNAUTHORIZED).build();
         }
@@ -45,4 +44,5 @@ public class UsersDetails extends ApplicationContextHolder implements UserDetail
                 .credentialsExpired(false)
                 .build();
     }
+
 }

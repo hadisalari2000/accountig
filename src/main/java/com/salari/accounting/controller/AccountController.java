@@ -20,32 +20,39 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/v1/account")
     public ResponseEntity<?> addAccount(@Valid @RequestBody AccountAddRequest request){
         return new ResponseEntity<>(accountService.addAccount(request), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/v1/account")
     public ResponseEntity<?> deleteAccount(@Valid @ApiParam(name="accountId",value="accountId") @RequestParam Long accountId){
         return new ResponseEntity<>(accountService.deleteAccount(accountId),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('User')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @GetMapping("/v1/accounts/user")
+    public ResponseEntity<?> getUserAccounts(@Valid @ApiParam(name="pageNumber",value = "pageNumber") @RequestParam Short pageNumber){
+        return new ResponseEntity<>(accountService.getAllUserAccounts(pageNumber),HttpStatus.OK);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/v1/accounts/user")
     public ResponseEntity<?> getUserAccounts(@Valid @ApiParam(name="userId",value = "userId") @RequestParam Integer userId,
                                              @Valid @ApiParam(name="pageNumber",value = "pageNumber") @RequestParam Short pageNumber){
-        return new ResponseEntity<>(accountService.getAllUserAccounts(userId,pageNumber),HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAllUserAccountsForAdmin(userId,pageNumber),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/v1/account/active")
     public ResponseEntity<?> activeAccount(@Valid @ApiParam(name="accountId",value = "accountId") @RequestParam Long accountId){
         return new ResponseEntity<>(accountService.activeAccount(accountId,10),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/v1/account/deActive")
     public ResponseEntity<?> deActiveAccount(@Valid @ApiParam(name="accountId",value = "accountId") @RequestParam Long accountId){
         return new ResponseEntity<>(accountService.deActiveAccount(accountId,10),HttpStatus.OK);

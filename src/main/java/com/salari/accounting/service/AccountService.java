@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.salari.accounting.service.GlobalService.*;
 
@@ -46,7 +45,20 @@ public class AccountService {
                 .build();
     }
 
-    public BaseDTO getAllUserAccounts(Integer userId,Short pageNumber) {
+    public BaseDTO getAllUserAccounts(Short pageNumber) {
+        String username=getCurrentUsername();
+        User user=getUserExists(username);
+        Pageable pageable = PageRequest.of(pageNumber-1, 10);
+        Page<Account> accounts = accountRepository.findAccountsByUserId(user.getId(),pageable);
+        Page<AccountDTO> accountDTOS = accounts.map(accountMapper::ACCOUNT_DTO);
+        PagerDTO<AccountDTO> pagerDTO = new PagerDTO<>(accountDTOS);
+        return BaseDTO.builder()
+                .metaDTO(MetaDTO.getInstance())
+                .data(pagerDTO)
+                .build();
+    }
+
+    public BaseDTO getAllUserAccountsForAdmin(Integer userId,Short pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber-1, 10);
         Page<Account> accounts = accountRepository.findAccountsByUserId(userId,pageable);
         Page<AccountDTO> accountDTOS = accounts.map(accountMapper::ACCOUNT_DTO);

@@ -2,12 +2,12 @@ package com.salari.accounting.service;
 
 import com.salari.accounting.model.domain.UserAddRequest;
 import com.salari.accounting.model.domain.UserChangePasswordRequest;
-import com.salari.accounting.model.domain.UserLoginRequest;
 import com.salari.accounting.model.dto.BaseDTO;
 import com.salari.accounting.model.dto.MetaDTO;
 import com.salari.accounting.model.entity.User;
 import com.salari.accounting.model.mapper.UserMapper;
 import com.salari.accounting.repository.UserRepository;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,7 @@ import static com.salari.accounting.service.GlobalService.serviceExceptionBuilde
 
 @Service
 public class UserService {
+
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -73,8 +74,20 @@ public class UserService {
                 .build();
     }
 
-    public BaseDTO login(UserLoginRequest request) {
-        return BaseDTO.builder().build();
+    public BaseDTO login(String username, String password) {
+
+        User user=userRepository.findUserByUserNameIgnoreCase(username)
+                .orElseThrow(()->serviceExceptionBuilder("invalidLogin.text",HttpStatus.BAD_REQUEST));
+
+        if(!user.getPassword().equals(password))
+           throw serviceExceptionBuilder("invalidLogin.text",HttpStatus.BAD_REQUEST);
+
+        String authString = user.getUserName() + "|" + user.getPassword();
+        String authEncBytes =new String(Base64.encodeBase64(authString.getBytes()));
+        return BaseDTO.builder()
+                .metaDTO(MetaDTO.getInstance())
+                .data(authEncBytes)
+                .build();
     }
 
     public BaseDTO getUsers() {
